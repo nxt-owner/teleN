@@ -16,7 +16,7 @@ def fetch_latest_news():
     response = requests.get(url)
     if response.status_code != 200:
         print(f'Failed to fetch the page. Status code: {response.status_code}')
-        return None, None
+        return None, None, None
 
     soup = BeautifulSoup(response.text, 'html.parser')
     news_blocks = soup.find_all('div', class_='post-block')
@@ -86,13 +86,18 @@ def send_to_telegram(message, image_url=None):
 
 # Monitor for new news every 5 minutes
 while True:
-    (title, news_message, image_url), latest_id = fetch_latest_news()
-    if latest_id and latest_id != last_sent_news_id:  # Check if this news ID has already been sent
-        if send_to_telegram(news_message, image_url):
-            print(f"Sent to Telegram: {news_message}")
-        else:
-            print("Failed to send to Telegram.")
-        last_sent_news_id = latest_id  # Update the last sent news ID
+    result, latest_id = fetch_latest_news()
+    
+    if result is None:
+        print("No news found or failed to fetch news.")
     else:
-        print("No new news to send.")
+        title, news_message, image_url = result
+        if latest_id and latest_id != last_sent_news_id:  # Check if this news ID has already been sent
+            if send_to_telegram(news_message, image_url):
+                print(f"Sent to Telegram: {news_message}")
+            else:
+                print("Failed to send to Telegram.")
+            last_sent_news_id = latest_id  # Update the last sent news ID
+        else:
+            print("No new news to send.")
     time.sleep(30)  # Wait 30S before checking again
