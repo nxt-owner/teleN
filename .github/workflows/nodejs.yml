@@ -1,0 +1,37 @@
+name: Run Node.js script
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # This will run the job every 5 minutes
+  workflow_dispatch:  # Allows manual trigger of the workflow
+
+jobs:
+  run-nodejs-script:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # Use the desired Node.js version
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Set environment variables for Telegram bot
+      - name: Set environment variables
+        run: echo "TELEGRAM_BOT_TOKEN=${{ secrets.TELEGRAM_BOT_TOKEN }}" >> $GITHUB_ENV
+        # Note: You need to set the TELEGRAM_BOT_TOKEN as a secret in your GitHub repository
+
+      - name: Set channel ID
+        run: echo "CHANNEL_ID=@news_SL1" >> $GITHUB_ENV
+        # Note: You can also store CHANNEL_ID as a secret in GitHub, if you prefer
+
+      # Run the Node.js script
+      - name: Run Node.js script
+        run: node w.js
