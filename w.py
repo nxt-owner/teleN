@@ -4,7 +4,7 @@ import time
 import os
 
 # Telegram Bot configuration
-TELEGRAM_BOT_TOKEN = '7857441004:AAEZnfkRs-uSFSSjMzdmDHH1cJpTflVioio'
+TELEGRAM_BOT_TOKEN = '7565343376:AAGQLghvIbReql4qIbzKPEz4cL-SqyDVsTU'
 CHANNEL_ID = '@news_SL1'
 BASE_URL = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}"
 
